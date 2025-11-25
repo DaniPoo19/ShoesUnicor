@@ -2,7 +2,6 @@ package com.mycompany.shoesunicor.view;
 
 import com.mycompany.shoesunicor.controller.AuthController;
 import com.mycompany.shoesunicor.util.AnimationUtil;
-import com.mycompany.shoesunicor.util.Session;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
