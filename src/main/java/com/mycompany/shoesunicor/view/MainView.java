@@ -1,7 +1,9 @@
 package com.mycompany.shoesunicor.view;
 
 import com.mycompany.shoesunicor.controller.AuthController;
+import com.mycompany.shoesunicor.model.CartItem;
 import com.mycompany.shoesunicor.util.Session;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -10,22 +12,28 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 /**
- * Vista Principal - Dashboard
- * VERSIÓN MÍNIMA: Solo productos + carrito + logout
- * 
+ 
  * @author Victor Negrete
  */
 public class MainView extends BorderPane {
+    
     private Session session;
     private AuthController authController;
     private Runnable onLogout;
     
-    // Vistas activas
+    // Todas las vistas
     private ProductsView productsView;
+    private CartView cartView;
+    private WishlistView wishlistView;
+    private OrderHistoryView orderHistoryView;
+    private AdminView adminView;
     
     // Botones de navegación
     private Button productsBtn;
     private Button cartBtn;
+    private Button wishlistBtn;
+    private Button ordersBtn;
+    private Button adminBtn;
     
     // Badge del carrito
     private Label cartBadge;
@@ -43,19 +51,24 @@ public class MainView extends BorderPane {
         // Navbar superior
         setTop(createNavbar());
         
-        // Inicializar vista de productos
+        // Inicializar todas las vistas
         productsView = new ProductsView();
+        cartView = new CartView();
+        wishlistView = new WishlistView();
+        orderHistoryView = new OrderHistoryView();
         
-        // Actualizar badge del carrito cuando cambie
-        session.getCart().addListener((javafx.collections.ListChangeListener.Change<? extends com.mycompany.shoesunicor.model.CartItem> c) -> {
+        // Vista de admin solo para administradores
+        if (session.isAdmin()) {
+            adminView = new AdminView();
+        }
+        
+        // Listener para actualizar badge del carrito
+        session.getCart().addListener((ListChangeListener.Change<? extends CartItem> c) -> {
             updateCartBadge();
         });
         updateCartBadge();
     }
     
-    /**
-     * Crea la barra de navegación superior
-     */
     private HBox createNavbar() {
         HBox navbar = new HBox(20);
         navbar.getStyleClass().add("navbar");
@@ -84,12 +97,22 @@ public class MainView extends BorderPane {
         cartBox.setAlignment(Pos.CENTER);
         cartBtn = new Button("Carrito");
         cartBtn.getStyleClass().add("navbar-button");
-        cartBtn.setOnAction(e -> showCartInfo());
+        cartBtn.setOnAction(e -> showCartView());
         
         cartBadge = new Label("0");
         cartBadge.getStyleClass().add("cart-badge");
         cartBadge.setVisible(false);
         cartBox.getChildren().addAll(cartBtn, cartBadge);
+        
+        // Botón Favoritos
+        wishlistBtn = new Button("Favoritos");
+        wishlistBtn.getStyleClass().add("navbar-button");
+        wishlistBtn.setOnAction(e -> showWishlistView());
+        
+        // Botón Mis Pedidos
+        ordersBtn = new Button("Mis Pedidos");
+        ordersBtn.getStyleClass().add("navbar-button");
+        ordersBtn.setOnAction(e -> showOrderHistoryView());
         
         // Botón Salir
         Button logoutBtn = new Button("Salir");
@@ -99,14 +122,21 @@ public class MainView extends BorderPane {
             onLogout.run();
         });
         
-        navbar.getChildren().addAll(logo, spacer, userLabel, productsBtn, cartBox, logoutBtn);
+        navbar.getChildren().addAll(logo, spacer, userLabel, productsBtn, cartBox, wishlistBtn, ordersBtn);
+        
+        // Agregar botón admin si es administrador
+        if (session.isAdmin()) {
+            adminBtn = new Button("Admin");
+            adminBtn.getStyleClass().add("navbar-button");
+            adminBtn.setOnAction(e -> showAdminView());
+            navbar.getChildren().add(adminBtn);
+        }
+        
+        navbar.getChildren().add(logoutBtn);
         
         return navbar;
     }
     
-    /**
-     * Actualiza el contador del carrito
-     */
     private void updateCartBadge() {
         int itemCount = session.getCartItemCount();
         if (itemCount > 0) {
@@ -117,47 +147,50 @@ public class MainView extends BorderPane {
         }
     }
     
-    /**
-     * Muestra la vista de productos
-     */
-    public void showProductsView() {
-        productsBtn.getStyleClass().add("navbar-button-active");
+    private void clearActiveButtons() {
+        productsBtn.getStyleClass().remove("navbar-button-active");
         cartBtn.getStyleClass().remove("navbar-button-active");
+        wishlistBtn.getStyleClass().remove("navbar-button-active");
+        ordersBtn.getStyleClass().remove("navbar-button-active");
+        if (adminBtn != null) {
+            adminBtn.getStyleClass().remove("navbar-button-active");
+        }
+    }
+    
+    public void showProductsView() {
+        clearActiveButtons();
+        productsBtn.getStyleClass().add("navbar-button-active");
         productsView.refresh();
         setCenter(productsView);
     }
     
-    /**
-     * Muestra información del carrito (versión simplificada)
-     */
-    private void showCartInfo() {
-        productsBtn.getStyleClass().remove("navbar-button-active");
+    public void showCartView() {
+        clearActiveButtons();
         cartBtn.getStyleClass().add("navbar-button-active");
-        
-        VBox cartInfo = new VBox(20);
-        cartInfo.setAlignment(Pos.CENTER);
-        cartInfo.setPadding(new Insets(50));
-        
-        Text title = new Text("Carrito de Compras");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-        
-        int items = session.getCartItemCount();
-        double total = session.getCartTotal();
-        
-        Label itemsLabel = new Label("Productos en carrito: " + items);
-        itemsLabel.setStyle("-fx-font-size: 18px;");
-        
-        Label totalLabel = new Label("Total: $" + String.format("%,.0f", total) + " COP");
-        totalLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2ECC71;");
-        
-        Button backBtn = new Button("Volver a Productos");
-        backBtn.getStyleClass().add("btn-primary");
-        backBtn.setOnAction(e -> showProductsView());
-        
-        Label note = new Label("(Funcionalidad de checkout próximamente)");
-        note.setStyle("-fx-font-size: 12px; -fx-text-fill: #95A5A6;");
-        
-        cartInfo.getChildren().addAll(title, itemsLabel, totalLabel, backBtn, note);
-        setCenter(cartInfo);
+        cartView.refresh();
+        setCenter(cartView);
+    }
+    
+    public void showWishlistView() {
+        clearActiveButtons();
+        wishlistBtn.getStyleClass().add("navbar-button-active");
+        wishlistView.refresh();
+        setCenter(wishlistView);
+    }
+    
+    public void showOrderHistoryView() {
+        clearActiveButtons();
+        ordersBtn.getStyleClass().add("navbar-button-active");
+        orderHistoryView.refresh();
+        setCenter(orderHistoryView);
+    }
+    
+    public void showAdminView() {
+        if (session.isAdmin()) {
+            clearActiveButtons();
+            adminBtn.getStyleClass().add("navbar-button-active");
+            adminView.refresh();
+            setCenter(adminView);
+        }
     }
 }
