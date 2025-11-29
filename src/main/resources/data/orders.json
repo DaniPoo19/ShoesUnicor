@@ -1,0 +1,56 @@
+[
+  {
+    "id": "ORD_1762886878967",
+    "userId": "USR_1762886794330",
+    "username": "Victor19",
+    "items": [
+      {
+        "productId": "PROD_1762886194434",
+        "productName": "Air Jordan 1 Naranja",
+        "price": 345000.0,
+        "quantity": 2,
+        "imagePath": "images/jrodan 1 naranja.jpg"
+      }
+    ],
+    "total": 690000.0,
+    "status": "PENDING",
+    "orderDate": "2025-11-11T13:47:58.9712664",
+    "shippingAddress": "Monteria Cordoba "
+  },
+  {
+    "id": "ORD_1762889425747",
+    "userId": "USR_1762886794330",
+    "username": "Victor19",
+    "items": [
+      {
+        "productId": "PROD_1762886194434",
+        "productName": "Air Jordan 1 Azul",
+        "price": 350000.0,
+        "quantity": 1,
+        "imagePath": "images/jordan 1 azules.jpg"
+      }
+    ],
+    "total": 350000.0,
+    "status": "PENDING",
+    "orderDate": "2025-11-11T14:30:25.7651332",
+    "shippingAddress": "Unicor Monteria"
+  },
+  {
+    "id": "ORD_1762892109039",
+    "userId": "USR_1762889613920",
+    "username": "Cami23",
+    "items": [
+      {
+        "productId": "PROD_1762886194434",
+        "productName": "Air Jordan 1 Azul",
+        "price": 350000.0,
+        "quantity": 1,
+        "imagePath": "images/jordan 1 azules.jpg"
+      }
+    ],
+    "total": 350000.0,
+    "status": "PENDING",
+    "orderDate": "2025-11-11T15:15:09.0542665",
+    "shippingAddress": "Monteria Cordoba"
+  }
+]
