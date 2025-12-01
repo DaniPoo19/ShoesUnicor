@@ -1,6 +1,7 @@
 package com.mycompany.shoesunicor.view;
 
 import com.mycompany.shoesunicor.controller.ProductController;
+import com.mycompany.shoesunicor.controller.UserController;
 import com.mycompany.shoesunicor.model.CartItem;
 import com.mycompany.shoesunicor.model.Product;
 import com.mycompany.shoesunicor.util.AnimationUtil;
@@ -20,25 +21,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Vista de catálogo de productos
- * VERSIÓN MÍNIMA: Solo mostrar productos y agregar al carrito
- * 
+ * Vista de catálogo de productos con todas las funcionalidades
  * @author Victor Negrete
  */
 public class ProductsView extends VBox {
+    
     private ProductController productController;
+    private UserController userController;
     private Session session;
     private TextField searchField;
     private FlowPane productsContainer;
     
     public ProductsView() {
         this.productController = new ProductController();
+        this.userController = new UserController();
         this.session = Session.getInstance();
         
         setupUI();
         loadProducts();
         
-        // Aplicar animación de entrada
         AnimationUtil.fadeIn(this);
     }
     
@@ -87,7 +88,6 @@ public class ProductsView extends VBox {
     
     private void loadProducts() {
         List<Product> products = productController.getAllProducts();
-        // Ordenar alfabéticamente por nombre
         products = products.stream()
                 .sorted(Comparator.comparing(Product::getName))
                 .collect(Collectors.toList());
@@ -117,10 +117,7 @@ public class ProductsView extends VBox {
             Label noProducts = new Label("No se encontraron productos");
             noProducts.setStyle("-fx-font-size: 18px; -fx-text-fill: #7F8C8D; -fx-font-weight: bold;");
             
-            Label suggestion = new Label("Intenta buscar con otros términos");
-            suggestion.setStyle("-fx-font-size: 14px; -fx-text-fill: #95A5A6;");
-            
-            emptyBox.getChildren().addAll(noProducts, suggestion);
+            emptyBox.getChildren().add(noProducts);
             productsContainer.getChildren().add(emptyBox);
             return;
         }
@@ -130,7 +127,6 @@ public class ProductsView extends VBox {
             VBox card = createProductCard(product);
             productsContainer.getChildren().add(card);
             
-            // Animación de entrada escalonada
             final int index = i;
             javafx.application.Platform.runLater(() -> {
                 javafx.animation.PauseTransition pause = 
@@ -173,7 +169,6 @@ public class ProductsView extends VBox {
             // Sin imagen
         }
         
-        imageView.getStyleClass().add("product-image");
         imageContainer.getChildren().add(imageView);
         StackPane.setAlignment(imageView, Pos.CENTER);
         
@@ -183,9 +178,8 @@ public class ProductsView extends VBox {
         nameLabel.setWrapText(true);
         nameLabel.setMaxWidth(240);
         nameLabel.setAlignment(Pos.CENTER);
-        nameLabel.setStyle("-fx-text-alignment: center;");
         
-        // Precio formateado en COP
+        // Precio
         Label priceLabel = new Label(CurrencyFormatter.formatPrice(product.getPrice()));
         priceLabel.getStyleClass().add("label-price");
         
@@ -193,7 +187,10 @@ public class ProductsView extends VBox {
         Label stockLabel = new Label(product.getStock() + " disponibles");
         stockLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #27AE60; -fx-font-weight: bold;");
         
-        // Botón agregar al carrito
+        // Botones
+        HBox buttonsBox = new HBox(10);
+        buttonsBox.setAlignment(Pos.CENTER);
+        
         Button addToCartBtn = new Button("Agregar al Carrito");
         addToCartBtn.getStyleClass().add("btn-primary");
         addToCartBtn.setOnAction(e -> {
@@ -201,17 +198,22 @@ public class ProductsView extends VBox {
             AnimationUtil.bounce(addToCartBtn);
         });
         
-        // Animación de hover
+        // Botón de favoritos
+        String heartIcon = userController.isInWishlist(product.getId()) ? "♥" : "♡";
+        Button wishlistBtn = new Button(heartIcon);
+        wishlistBtn.getStyleClass().add("btn-icon");
+        wishlistBtn.setStyle("-fx-font-size: 18px; -fx-min-width: 40px;");
+        wishlistBtn.setOnAction(e -> toggleWishlist(product, wishlistBtn));
+        
+        buttonsBox.getChildren().addAll(addToCartBtn, wishlistBtn);
+        
         AnimationUtil.scaleOnHover(card, 1.05);
         
-        card.getChildren().addAll(imageContainer, nameLabel, priceLabel, stockLabel, addToCartBtn);
+        card.getChildren().addAll(imageContainer, nameLabel, priceLabel, stockLabel, buttonsBox);
         
         return card;
     }
     
-    /**
-     * Agrega un producto al carrito
-     */
     private void addToCart(Product product) {
         if (product.getStock() > 0) {
             CartItem item = new CartItem(product, 1);
@@ -221,19 +223,25 @@ public class ProductsView extends VBox {
             alert.setTitle("Producto agregado");
             alert.setHeaderText(null);
             alert.setContentText(product.getName() + " ha sido agregado al carrito");
-            
-            DialogPane dialogPane = alert.getDialogPane();
-            dialogPane.getStylesheets().add(
-                getClass().getResource("/css/styles.css").toExternalForm()
-            );
-            
             alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Sin stock");
             alert.setHeaderText(null);
-            alert.setContentText("Este producto no está disponible en este momento");
+            alert.setContentText("Este producto no está disponible");
             alert.showAndWait();
+        }
+    }
+    
+    private void toggleWishlist(Product product, Button btn) {
+        if (userController.isInWishlist(product.getId())) {
+            userController.removeFromWishlist(product.getId());
+            btn.setText("♡");
+            AnimationUtil.shake(btn);
+        } else {
+            userController.addToWishlist(product.getId());
+            btn.setText("♥");
+            AnimationUtil.bounce(btn);
         }
     }
 }
