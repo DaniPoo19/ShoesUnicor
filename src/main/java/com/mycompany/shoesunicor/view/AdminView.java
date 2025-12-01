@@ -624,7 +624,9 @@ public class AdminView extends VBox {
     private void loadProducts() {
         List<Product> products = productController.getAllProductsAdmin();
         filteredProducts = new FilteredList<>(FXCollections.observableArrayList(products), p -> true);
+        productsTable.setItems(null); // Limpiar primero para forzar actualización
         productsTable.setItems(filteredProducts);
+        productsTable.refresh(); // Forzar refresh de todas las celdas
         updateStats();
     }
     
