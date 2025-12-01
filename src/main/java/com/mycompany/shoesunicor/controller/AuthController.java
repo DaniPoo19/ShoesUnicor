@@ -16,12 +16,14 @@ public class AuthController {
 
     /**
      * Intenta iniciar sesión con las credenciales proporcionadas
+     * El nombre de usuario es case-insensitive (no distingue mayúsculas/minúsculas)
      */
     public boolean login(String username, String password) {
         List<User> users = JsonDatabase.loadUsers();
 
         for (User user : users) {
-            if (user.getUsername().equals(username) &&
+            // Comparación case-insensitive para el username
+            if (user.getUsername().equalsIgnoreCase(username) &&
                     PasswordUtil.verifyPassword(password, user.getPassword())) {
                 Session.getInstance().login(user);
                 return true;
@@ -33,16 +35,17 @@ public class AuthController {
 
     /**
      * Registra un nuevo usuario
+     * El nombre de usuario es case-insensitive para evitar duplicados
      */
     public boolean register(String username, String password, String email, String fullName) {
         List<User> users = JsonDatabase.loadUsers();
 
-        // Verificar si el usuario ya existe
+        // Verificar si el usuario ya existe (case-insensitive)
         for (User user : users) {
-            if (user.getUsername().equals(username)) {
+            if (user.getUsername().equalsIgnoreCase(username)) {
                 return false; // Usuario ya existe
             }
-            if (user.getEmail().equals(email)) {
+            if (user.getEmail().equalsIgnoreCase(email)) {
                 return false; // Email ya registrado
             }
         }
@@ -80,10 +83,10 @@ public class AuthController {
     }
 
     /**
-     * Verifica si un nombre de usuario está disponible
+     * Verifica si un nombre de usuario está disponible (case-insensitive)
      */
     public boolean isUsernameAvailable(String username) {
         List<User> users = JsonDatabase.loadUsers();
-        return users.stream().noneMatch(u -> u.getUsername().equals(username));
+        return users.stream().noneMatch(u -> u.getUsername().equalsIgnoreCase(username));
     }
 }
