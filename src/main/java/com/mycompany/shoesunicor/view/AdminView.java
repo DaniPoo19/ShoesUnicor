@@ -69,8 +69,9 @@ public class AdminView extends VBox {
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
         // Botón de refrescar
-        Button refreshBtn = new Button("🔄 Actualizar");
+        Button refreshBtn = new Button("Actualizar Datos");
         refreshBtn.getStyleClass().add("btn-secondary");
+        refreshBtn.setTooltip(new Tooltip("Recargar todos los datos de la base de datos"));
         refreshBtn.setOnAction(e -> {
             refresh();
             AnimationUtil.bounce(refreshBtn);
@@ -109,28 +110,45 @@ public class AdminView extends VBox {
         toolbar.setAlignment(Pos.CENTER_LEFT);
         
         // Botón agregar producto
-        Button addProductBtn = new Button("➕ Nuevo Producto");
+        Button addProductBtn = new Button("+ Agregar Producto");
         addProductBtn.getStyleClass().add("btn-primary");
+        addProductBtn.setTooltip(new Tooltip("Añadir un nuevo producto al catálogo"));
         addProductBtn.setOnAction(e -> showAddProductDialog());
         
         // Búsqueda
         searchProductField = new TextField();
-        searchProductField.setPromptText("🔍 Buscar productos...");
+        searchProductField.setPromptText("Buscar por nombre, ID, categoría...");
         searchProductField.getStyleClass().add("text-field");
-        searchProductField.setPrefWidth(250);
+        searchProductField.setPrefWidth(280);
+        searchProductField.setTooltip(new Tooltip("Escribe para buscar productos"));
         searchProductField.textProperty().addListener((obs, old, newVal) -> filterProducts(newVal));
         
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
         // Filtro por estado
+        Label filterLabel = new Label("Filtrar por:");
+        filterLabel.setStyle("-fx-font-weight: bold;");
+        
         ComboBox<String> statusFilter = new ComboBox<>();
-        statusFilter.getItems().addAll("Todos", "Activos", "Inactivos", "Sin Stock", "Stock Bajo");
-        statusFilter.setValue("Todos");
-        statusFilter.setOnAction(e -> applyStatusFilter(statusFilter.getValue()));
+        statusFilter.getItems().addAll("Todos los productos", "Solo activos", "Solo inactivos", "Sin stock (agotados)", "Stock bajo (1-5)");
+        statusFilter.setValue("Todos los productos");
+        statusFilter.setPrefWidth(160);
+        statusFilter.setTooltip(new Tooltip("Filtrar productos por su estado"));
+        statusFilter.setOnAction(e -> {
+            String selected = statusFilter.getValue();
+            String filter = switch (selected) {
+                case "Solo activos" -> "Activos";
+                case "Solo inactivos" -> "Inactivos";
+                case "Sin stock (agotados)" -> "Sin Stock";
+                case "Stock bajo (1-5)" -> "Stock Bajo";
+                default -> "Todos";
+            };
+            applyStatusFilter(filter);
+        });
         
         toolbar.getChildren().addAll(addProductBtn, searchProductField, spacer, 
-                                     new Label("Filtrar:"), statusFilter);
+                                     filterLabel, statusFilter);
         
         // Tabla de productos
         productsTable = new TableView<>();
@@ -260,26 +278,30 @@ public class AdminView extends VBox {
             }
         });
         
-        // Columna de acciones
+        // Columna de acciones con botones más claros
         TableColumn<Product, Void> actionsCol = new TableColumn<>("Acciones");
-        actionsCol.setPrefWidth(200);
+        actionsCol.setPrefWidth(280);
         actionsCol.setCellFactory(col -> new TableCell<>() {
-            private final Button editBtn = new Button("✏️");
+            private final Button editBtn = new Button("Editar");
             private final Button toggleBtn = new Button();
-            private final Button stockBtn = new Button("📦");
-            private final Button priceBtn = new Button("💰");
+            private final Button stockBtn = new Button("Stock");
+            private final Button priceBtn = new Button("Precio");
             
             {
-                editBtn.getStyleClass().add("btn-icon");
-                editBtn.setTooltip(new Tooltip("Editar producto"));
+                // Estilo botón Editar - Azul
+                editBtn.setStyle("-fx-background-color: #3498DB; -fx-text-fill: white; " +
+                               "-fx-font-size: 11px; -fx-padding: 5 10; -fx-background-radius: 5; -fx-cursor: hand;");
+                editBtn.setTooltip(new Tooltip("Editar todos los datos del producto"));
                 
-                toggleBtn.getStyleClass().add("btn-icon");
+                // Estilo botón Stock - Naranja
+                stockBtn.setStyle("-fx-background-color: #E67E22; -fx-text-fill: white; " +
+                                "-fx-font-size: 11px; -fx-padding: 5 10; -fx-background-radius: 5; -fx-cursor: hand;");
+                stockBtn.setTooltip(new Tooltip("Modificar cantidad en inventario"));
                 
-                stockBtn.getStyleClass().add("btn-icon");
-                stockBtn.setTooltip(new Tooltip("Cambiar stock"));
-                
-                priceBtn.getStyleClass().add("btn-icon");
-                priceBtn.setTooltip(new Tooltip("Cambiar precio"));
+                // Estilo botón Precio - Verde
+                priceBtn.setStyle("-fx-background-color: #27AE60; -fx-text-fill: white; " +
+                                "-fx-font-size: 11px; -fx-padding: 5 10; -fx-background-radius: 5; -fx-cursor: hand;");
+                priceBtn.setTooltip(new Tooltip("Cambiar el precio del producto"));
                 
                 editBtn.setOnAction(e -> {
                     Product product = getTableView().getItems().get(getIndex());
@@ -309,12 +331,21 @@ public class AdminView extends VBox {
                     setGraphic(null);
                 } else {
                     Product product = getTableView().getItems().get(getIndex());
-                    toggleBtn.setText(product.isActive() ? "🔴" : "🟢");
-                    toggleBtn.setTooltip(new Tooltip(
-                        product.isActive() ? "Desactivar producto" : "Activar producto"
-                    ));
                     
-                    HBox buttons = new HBox(5, editBtn, priceBtn, stockBtn, toggleBtn);
+                    // Botón toggle dinámico según estado
+                    if (product.isActive()) {
+                        toggleBtn.setText("Desactivar");
+                        toggleBtn.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white; " +
+                                         "-fx-font-size: 11px; -fx-padding: 5 8; -fx-background-radius: 5; -fx-cursor: hand;");
+                        toggleBtn.setTooltip(new Tooltip("Ocultar producto del catálogo"));
+                    } else {
+                        toggleBtn.setText("Activar");
+                        toggleBtn.setStyle("-fx-background-color: #2ECC71; -fx-text-fill: white; " +
+                                         "-fx-font-size: 11px; -fx-padding: 5 8; -fx-background-radius: 5; -fx-cursor: hand;");
+                        toggleBtn.setTooltip(new Tooltip("Mostrar producto en el catálogo"));
+                    }
+                    
+                    HBox buttons = new HBox(4, editBtn, priceBtn, stockBtn, toggleBtn);
                     buttons.setAlignment(Pos.CENTER);
                     setGraphic(buttons);
                 }
@@ -478,18 +509,20 @@ public class AdminView extends VBox {
             }
         });
         
-        TableColumn<Order, Void> actionsCol = new TableColumn<>("Acciones");
-        actionsCol.setPrefWidth(200);
+        TableColumn<Order, Void> actionsCol = new TableColumn<>("Cambiar Estado");
+        actionsCol.setPrefWidth(220);
         actionsCol.setCellFactory(col -> new TableCell<>() {
             private final ComboBox<OrderStatus> statusCombo = new ComboBox<>();
-            private final Button updateBtn = new Button("✓");
+            private final Button updateBtn = new Button("Aplicar");
             
             {
                 statusCombo.getItems().addAll(OrderStatus.values());
-                statusCombo.setPrefWidth(110);
-                updateBtn.getStyleClass().add("btn-primary");
-                updateBtn.setStyle("-fx-padding: 5 10;");
-                updateBtn.setTooltip(new Tooltip("Actualizar estado"));
+                statusCombo.setPrefWidth(120);
+                statusCombo.setTooltip(new Tooltip("Seleccionar nuevo estado del pedido"));
+                
+                updateBtn.setStyle("-fx-background-color: #3498DB; -fx-text-fill: white; " +
+                                 "-fx-font-size: 11px; -fx-padding: 5 12; -fx-background-radius: 5; -fx-cursor: hand;");
+                updateBtn.setTooltip(new Tooltip("Guardar el nuevo estado"));
                 updateBtn.setOnAction(e -> {
                     Order order = getTableView().getItems().get(getIndex());
                     OrderStatus newStatus = statusCombo.getValue();
@@ -778,8 +811,10 @@ public class AdminView extends VBox {
         imageField.setPromptText("Ruta de la imagen");
         imageField.getStyleClass().add("text-field");
         
-        Button browseBtn = new Button("📁");
-        browseBtn.getStyleClass().add("btn-secondary");
+        Button browseBtn = new Button("Buscar...");
+        browseBtn.setStyle("-fx-background-color: #95A5A6; -fx-text-fill: white; " +
+                         "-fx-font-size: 11px; -fx-padding: 8 12; -fx-background-radius: 5; -fx-cursor: hand;");
+        browseBtn.setTooltip(new Tooltip("Seleccionar imagen desde el computador"));
         browseBtn.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Seleccionar Imagen");
