@@ -719,10 +719,20 @@ public class AdminView extends VBox {
                     showError("Error", "El stock no puede ser negativo.");
                     return;
                 }
+                
+                boolean wasActive = product.isActive();
                 product.setStock(newStock);
                 productController.updateProduct(product);
                 refresh();
-                showSuccess("¡Stock actualizado!", "Stock de " + product.getName() + ": " + newStock);
+                
+                // Mensaje especial si se desactivó automáticamente
+                if (newStock == 0 && wasActive) {
+                    showSuccess("Stock actualizado", 
+                        "El producto \"" + product.getName() + "\" ahora tiene stock 0.\n" +
+                        "⚠️ Se ha DESACTIVADO automáticamente y aparecerá como 'Sin Stock' en el catálogo.");
+                } else {
+                    showSuccess("¡Stock actualizado!", "Stock de " + product.getName() + ": " + newStock);
+                }
             } catch (NumberFormatException e) {
                 showError("Error", "Por favor ingresa un número válido.");
             }
@@ -755,8 +765,24 @@ public class AdminView extends VBox {
     }
     
     private void toggleProductStatus(Product product) {
+        boolean newStatus = !product.isActive();
+        
+        // Si quiere activar pero no tiene stock, mostrar error
+        if (newStatus && product.getStock() == 0) {
+            showError("No se puede activar", 
+                "El producto \"" + product.getName() + "\" no tiene stock disponible.\n\n" +
+                "Primero debes agregar stock para poder activarlo.");
+            return;
+        }
+        
         String action = product.isActive() ? "desactivar" : "activar";
         String message = "¿Deseas " + action + " el producto \"" + product.getName() + "\"?";
+        
+        if (newStatus) {
+            message += "\n\nEl producto volverá a aparecer disponible en el catálogo.";
+        } else {
+            message += "\n\nEl producto aparecerá como 'Sin Stock' en el catálogo.";
+        }
         
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Cambiar Estado");
@@ -764,12 +790,14 @@ public class AdminView extends VBox {
         alert.setContentText(message);
         
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            product.setActive(!product.isActive());
-            productController.updateProduct(product);
-            refresh();
-            
-            String statusMsg = product.isActive() ? "activado" : "desactivado";
-            showSuccess("Estado cambiado", "El producto ha sido " + statusMsg + ".");
+            // Usar método específico que no aplica lógica automática
+            if (productController.toggleProductStatus(product.getId(), newStatus)) {
+                refresh();
+                String statusMsg = newStatus ? "activado" : "desactivado";
+                showSuccess("Estado cambiado", "El producto ha sido " + statusMsg + ".");
+            } else {
+                showError("Error", "No se pudo cambiar el estado del producto.");
+            }
         }
     }
     

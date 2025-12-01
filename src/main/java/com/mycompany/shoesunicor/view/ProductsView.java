@@ -87,7 +87,8 @@ public class ProductsView extends VBox {
     }
     
     private void loadProducts() {
-        List<Product> products = productController.getAllProducts();
+        // Cargar todos los productos para mostrar "Sin Stock" cuando corresponda
+        List<Product> products = productController.getAllProductsForCatalog();
         products = products.stream()
                 .sorted(Comparator.comparing(Product::getName))
                 .collect(Collectors.toList());
@@ -98,8 +99,10 @@ public class ProductsView extends VBox {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             loadProducts();
         } else {
-            List<Product> products = productController.searchProducts(searchTerm);
-            products = products.stream()
+            String lowerSearch = searchTerm.toLowerCase();
+            List<Product> products = productController.getAllProductsForCatalog().stream()
+                    .filter(p -> p.getName().toLowerCase().contains(lowerSearch) ||
+                                p.getDescription().toLowerCase().contains(lowerSearch))
                     .sorted(Comparator.comparing(Product::getName))
                     .collect(Collectors.toList());
             displayProducts(products);
@@ -145,6 +148,9 @@ public class ProductsView extends VBox {
         card.setMinWidth(260);
         card.setAlignment(Pos.TOP_CENTER);
         
+        // Verificar si el producto está disponible
+        boolean isAvailable = product.isActive() && product.getStock() > 0;
+        
         // Container para la imagen
         StackPane imageContainer = new StackPane();
         imageContainer.setPrefSize(240, 240);
@@ -172,6 +178,25 @@ public class ProductsView extends VBox {
         imageContainer.getChildren().add(imageView);
         StackPane.setAlignment(imageView, Pos.CENTER);
         
+        // Overlay de "Sin Stock" si no está disponible
+        if (!isAvailable) {
+            // Oscurecer la imagen
+            imageView.setOpacity(0.5);
+            
+            // Badge de Sin Stock sobre la imagen
+            Label outOfStockBadge = new Label("SIN STOCK");
+            outOfStockBadge.setStyle(
+                "-fx-background-color: #E74C3C; " +
+                "-fx-text-fill: white; " +
+                "-fx-font-size: 14px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-padding: 8 20; " +
+                "-fx-background-radius: 20;"
+            );
+            imageContainer.getChildren().add(outOfStockBadge);
+            StackPane.setAlignment(outOfStockBadge, Pos.CENTER);
+        }
+        
         // Nombre del producto
         Label nameLabel = new Label(product.getName());
         nameLabel.getStyleClass().add("label-product-name");
@@ -182,23 +207,47 @@ public class ProductsView extends VBox {
         // Precio
         Label priceLabel = new Label(CurrencyFormatter.formatPrice(product.getPrice()));
         priceLabel.getStyleClass().add("label-price");
+        if (!isAvailable) {
+            priceLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #95A5A6;");
+        }
         
         // Stock
-        Label stockLabel = new Label(product.getStock() + " disponibles");
-        stockLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #27AE60; -fx-font-weight: bold;");
+        Label stockLabel;
+        if (!isAvailable) {
+            stockLabel = new Label("❌ Agotado - Sin Stock");
+            stockLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #E74C3C; -fx-font-weight: bold;");
+        } else if (product.getStock() <= 5) {
+            stockLabel = new Label("⚠️ ¡Solo " + product.getStock() + " disponibles!");
+            stockLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #E67E22; -fx-font-weight: bold;");
+        } else {
+            stockLabel = new Label("✓ " + product.getStock() + " disponibles");
+            stockLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #27AE60; -fx-font-weight: bold;");
+        }
         
         // Botones
         HBox buttonsBox = new HBox(10);
         buttonsBox.setAlignment(Pos.CENTER);
         
-        Button addToCartBtn = new Button("Agregar al Carrito");
-        addToCartBtn.getStyleClass().add("btn-primary");
-        addToCartBtn.setOnAction(e -> {
-            addToCart(product);
-            AnimationUtil.bounce(addToCartBtn);
-        });
+        Button addToCartBtn = new Button(isAvailable ? "Agregar al Carrito" : "No Disponible");
+        if (isAvailable) {
+            addToCartBtn.getStyleClass().add("btn-primary");
+            addToCartBtn.setOnAction(e -> {
+                addToCart(product);
+                AnimationUtil.bounce(addToCartBtn);
+            });
+        } else {
+            addToCartBtn.setStyle(
+                "-fx-background-color: #BDC3C7; " +
+                "-fx-text-fill: #7F8C8D; " +
+                "-fx-font-size: 14px; " +
+                "-fx-padding: 12 30; " +
+                "-fx-background-radius: 10; " +
+                "-fx-cursor: default;"
+            );
+            addToCartBtn.setDisable(true);
+        }
         
-        // Botón de favoritos
+        // Botón de favoritos (siempre disponible)
         String heartIcon = userController.isInWishlist(product.getId()) ? "♥" : "♡";
         Button wishlistBtn = new Button(heartIcon);
         wishlistBtn.getStyleClass().add("btn-icon");
@@ -207,7 +256,13 @@ public class ProductsView extends VBox {
         
         buttonsBox.getChildren().addAll(addToCartBtn, wishlistBtn);
         
-        AnimationUtil.scaleOnHover(card, 1.05);
+        // Solo animar hover si está disponible
+        if (isAvailable) {
+            AnimationUtil.scaleOnHover(card, 1.05);
+        } else {
+            // Estilo diferente para productos no disponibles
+            card.setStyle("-fx-opacity: 0.85;");
+        }
         
         card.getChildren().addAll(imageContainer, nameLabel, priceLabel, stockLabel, buttonsBox);
         
