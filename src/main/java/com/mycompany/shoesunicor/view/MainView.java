@@ -44,7 +44,13 @@ public class MainView extends BorderPane {
         this.onLogout = onLogout;
         
         setupUI();
-        showProductsView();
+        
+        // Redirigir según el rol del usuario
+        if (session.isAdmin()) {
+            showAdminView();
+        } else {
+            showProductsView();
+        }
     }
     
     private void setupUI() {
