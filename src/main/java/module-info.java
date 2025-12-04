@@ -1,7 +1,7 @@
 module com.mycompany.shoesunicor {
     requires javafx.controls;
     requires javafx.fxml;
-    requires com.google.gson;
+    requires transitive com.google.gson;
     requires transitive javafx.graphics;
     requires transitive javafx.base;
     

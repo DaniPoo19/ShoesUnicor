@@ -154,7 +154,7 @@ public class AdminView extends VBox {
         productsTable = new TableView<>();
         productsTable.getStyleClass().add("table-view");
         VBox.setVgrow(productsTable, Priority.ALWAYS);
-        productsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        productsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         
         // Columna ID
         TableColumn<Product, String> idCol = new TableColumn<>("ID");
@@ -460,7 +460,7 @@ public class AdminView extends VBox {
         ordersTable = new TableView<>();
         ordersTable.getStyleClass().add("table-view");
         VBox.setVgrow(ordersTable, Priority.ALWAYS);
-        ordersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        ordersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         
         TableColumn<Order, String> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -562,7 +562,7 @@ public class AdminView extends VBox {
         usersTable = new TableView<>();
         usersTable.getStyleClass().add("table-view");
         VBox.setVgrow(usersTable, Priority.ALWAYS);
-        usersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        usersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         
         TableColumn<User, String> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
