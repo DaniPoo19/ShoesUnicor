@@ -98,6 +98,7 @@ public class AdminView extends VBox {
         getChildren().addAll(header, tabPane);
     }
     
+    @SuppressWarnings("unchecked")
     private VBox createProductsTab() {
         VBox container = new VBox(15);
         container.setPadding(new Insets(15));
@@ -452,6 +453,7 @@ public class AdminView extends VBox {
         });
     }
     
+    @SuppressWarnings("unchecked")
     private VBox createOrdersTab() {
         VBox container = new VBox(15);
         container.setPadding(new Insets(15));
@@ -554,6 +556,7 @@ public class AdminView extends VBox {
         return container;
     }
     
+    @SuppressWarnings("unchecked")
     private VBox createUsersTab() {
         VBox container = new VBox(15);
         container.setPadding(new Insets(15));

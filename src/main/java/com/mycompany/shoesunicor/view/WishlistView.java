@@ -89,6 +89,15 @@ public class WishlistView extends VBox {
         card.getStyleClass().add("product-card");
         card.setPrefWidth(250);
         card.setAlignment(Pos.TOP_CENTER);
+        card.setCursor(javafx.scene.Cursor.HAND);
+        
+        // Click en la tarjeta para ver detalles
+        card.setOnMouseClicked(e -> {
+            // Solo abrir detalles si no se hizo click en un botón
+            if (!(e.getTarget() instanceof Button)) {
+                openProductDetail(product);
+            }
+        });
         
         // Imagen
         ImageView imageView = new ImageView();
@@ -119,6 +128,18 @@ public class WishlistView extends VBox {
         Label stockLabel = new Label(product.getStock() + " disponibles");
         stockLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7F8C8D;");
         
+        // Botón ver detalles
+        Button viewDetailsBtn = new Button("👁️ Ver Detalles");
+        viewDetailsBtn.setStyle(
+            "-fx-background-color: #3498DB; " +
+            "-fx-text-fill: white; " +
+            "-fx-font-size: 12px; " +
+            "-fx-padding: 8 15; " +
+            "-fx-background-radius: 8; " +
+            "-fx-cursor: hand;"
+        );
+        viewDetailsBtn.setOnAction(e -> openProductDetail(product));
+        
         // Botones
         HBox buttonsBox = new HBox(10);
         buttonsBox.setAlignment(Pos.CENTER);
@@ -133,7 +154,7 @@ public class WishlistView extends VBox {
         
         buttonsBox.getChildren().addAll(addToCartBtn, removeBtn);
         
-        card.getChildren().addAll(imageView, nameLabel, priceLabel, stockLabel, buttonsBox);
+        card.getChildren().addAll(imageView, nameLabel, priceLabel, stockLabel, viewDetailsBtn, buttonsBox);
         
         return card;
     }
@@ -160,6 +181,16 @@ public class WishlistView extends VBox {
     private void removeFromWishlist(Product product) {
         userController.removeFromWishlist(product.getId());
         refresh();
+    }
+    
+    /**
+     * Abre la vista de detalles del producto
+     */
+    private void openProductDetail(Product product) {
+        MainView mainView = MainView.getInstance();
+        if (mainView != null) {
+            mainView.showProductDetailView(product);
+        }
     }
 }
 

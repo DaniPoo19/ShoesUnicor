@@ -2,6 +2,7 @@ package com.mycompany.shoesunicor.view;
 
 import com.mycompany.shoesunicor.controller.AuthController;
 import com.mycompany.shoesunicor.model.CartItem;
+import com.mycompany.shoesunicor.model.Product;
 import com.mycompany.shoesunicor.util.Session;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
@@ -12,10 +13,12 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 /**
- 
+ * Vista principal con navegación
  * @author Victor Negrete
  */
 public class MainView extends BorderPane {
+    
+    private static MainView instance;
     
     private Session session;
     private AuthController authController;
@@ -39,6 +42,7 @@ public class MainView extends BorderPane {
     private Label cartBadge;
     
     public MainView(Runnable onLogout) {
+        instance = this;
         this.session = Session.getInstance();
         this.authController = new AuthController();
         this.onLogout = onLogout;
@@ -51,6 +55,13 @@ public class MainView extends BorderPane {
         } else {
             showProductsView();
         }
+    }
+    
+    /**
+     * Obtiene la instancia actual de MainView
+     */
+    public static MainView getInstance() {
+        return instance;
     }
     
     private void setupUI() {
@@ -198,5 +209,16 @@ public class MainView extends BorderPane {
             adminView.refresh();
             setCenter(adminView);
         }
+    }
+    
+    /**
+     * Muestra la vista de detalles de un producto
+     * @param product El producto a mostrar
+     */
+    public void showProductDetailView(Product product) {
+        clearActiveButtons();
+        productsBtn.getStyleClass().add("navbar-button-active");
+        ProductDetailView detailView = new ProductDetailView(product, this::showProductsView);
+        setCenter(detailView);
     }
 }

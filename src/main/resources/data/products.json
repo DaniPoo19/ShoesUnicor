@@ -44,17 +44,6 @@
     "active": true
   },
   {
-    "id": "PROD_1733324400005",
-    "name": "Air Jordan 1 Spiderman",
-    "description": "Edición especial Air Jordan 1 inspirada en Spiderman. Diseño exclusivo para coleccionistas. Incluye detalles únicos del héroe arácnido. Edición limitada.",
-    "price": 450000.0,
-    "stock": 5,
-    "imagePath": "images/Jorad 1 Spierman.jpg",
-    "category": "Zapatillas",
-    "brand": "Nike",
-    "active": true
-  },
-  {
     "id": "PROD_1733324400006",
     "name": "Air Jordan 1 Verde",
     "description": "Zapatillas Air Jordan 1 en verde fresco. Perfecto para los fans de los colores institucionales de Unicor. Diseño deportivo con toque elegante.",
@@ -63,6 +52,28 @@
     "imagePath": "images/jordan 1 verde.jpg",
     "category": "Zapatillas",
     "brand": "Nike",
+    "active": true
+  },
+  {
+    "id": "PROD_1733324400005",
+    "name": "Air Jordan 1 Spiderman",
+    "description": "Edición especial Air Jordan 1 inspirada en Spiderman. Diseño exclusivo para coleccionistas. Incluye detalles únicos del héroe arácnido. Edición limitada.",
+    "price": 450000.0,
+    "stock": 3,
+    "imagePath": "images/Jorad 1 Spierman.jpg",
+    "category": "Zapatillas",
+    "brand": "Nike",
+    "active": true
+  },
+  {
+    "id": "PROD_1764864468652",
+    "name": "Jordan 1 x travis",
+    "description": "Colaboracion con travis scot",
+    "price": 299999.0,
+    "stock": 4,
+    "imagePath": "C:\\Users\\negre\\OneDrive\\Desktop\\shopping.png",
+    "category": "Casuales",
+    "brand": "Jordan",
     "active": true
   }
 ]

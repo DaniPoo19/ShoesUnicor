@@ -147,6 +147,15 @@ public class ProductsView extends VBox {
         card.setMaxWidth(260);
         card.setMinWidth(260);
         card.setAlignment(Pos.TOP_CENTER);
+        card.setCursor(javafx.scene.Cursor.HAND);
+        
+        // Click en la tarjeta para ver detalles
+        card.setOnMouseClicked(e -> {
+            // Solo abrir detalles si no se hizo click en un botón
+            if (!(e.getTarget() instanceof javafx.scene.control.Button)) {
+                openProductDetail(product);
+            }
+        });
         
         // Verificar si el producto está disponible
         boolean isAvailable = product.isActive() && product.getStock() > 0;
@@ -224,13 +233,26 @@ public class ProductsView extends VBox {
             stockLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #27AE60; -fx-font-weight: bold;");
         }
         
-        // Botones
+        // Botón ver detalles
+        Button viewDetailsBtn = new Button("👁️ Ver Detalles");
+        viewDetailsBtn.setStyle(
+            "-fx-background-color: #3498DB; " +
+            "-fx-text-fill: white; " +
+            "-fx-font-size: 12px; " +
+            "-fx-padding: 8 20; " +
+            "-fx-background-radius: 8; " +
+            "-fx-cursor: hand;"
+        );
+        viewDetailsBtn.setOnAction(e -> openProductDetail(product));
+        
+        // Botones de acción
         HBox buttonsBox = new HBox(10);
         buttonsBox.setAlignment(Pos.CENTER);
         
-        Button addToCartBtn = new Button(isAvailable ? "Agregar al Carrito" : "No Disponible");
+        Button addToCartBtn = new Button(isAvailable ? "🛒 Agregar" : "No Disponible");
         if (isAvailable) {
             addToCartBtn.getStyleClass().add("btn-primary");
+            addToCartBtn.setStyle("-fx-font-size: 12px; -fx-padding: 10 15;");
             addToCartBtn.setOnAction(e -> {
                 addToCart(product);
                 AnimationUtil.bounce(addToCartBtn);
@@ -239,8 +261,8 @@ public class ProductsView extends VBox {
             addToCartBtn.setStyle(
                 "-fx-background-color: #BDC3C7; " +
                 "-fx-text-fill: #7F8C8D; " +
-                "-fx-font-size: 14px; " +
-                "-fx-padding: 12 30; " +
+                "-fx-font-size: 12px; " +
+                "-fx-padding: 10 15; " +
                 "-fx-background-radius: 10; " +
                 "-fx-cursor: default;"
             );
@@ -264,7 +286,7 @@ public class ProductsView extends VBox {
             card.setStyle("-fx-opacity: 0.85;");
         }
         
-        card.getChildren().addAll(imageContainer, nameLabel, priceLabel, stockLabel, buttonsBox);
+        card.getChildren().addAll(imageContainer, nameLabel, priceLabel, stockLabel, viewDetailsBtn, buttonsBox);
         
         return card;
     }
@@ -297,6 +319,16 @@ public class ProductsView extends VBox {
             userController.addToWishlist(product.getId());
             btn.setText("♥");
             AnimationUtil.bounce(btn);
+        }
+    }
+    
+    /**
+     * Abre la vista de detalles del producto
+     */
+    private void openProductDetail(Product product) {
+        MainView mainView = MainView.getInstance();
+        if (mainView != null) {
+            mainView.showProductDetailView(product);
         }
     }
 }
