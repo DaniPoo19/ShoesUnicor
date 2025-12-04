@@ -98,7 +98,6 @@ public class AdminView extends VBox {
         getChildren().addAll(header, tabPane);
     }
     
-    @SuppressWarnings("unchecked")
     private VBox createProductsTab() {
         VBox container = new VBox(15);
         container.setPadding(new Insets(15));
@@ -453,7 +452,6 @@ public class AdminView extends VBox {
         });
     }
     
-    @SuppressWarnings("unchecked")
     private VBox createOrdersTab() {
         VBox container = new VBox(15);
         container.setPadding(new Insets(15));
@@ -492,7 +490,8 @@ public class AdminView extends VBox {
                     setGraphic(null);
                 } else {
                     Order order = getTableView().getItems().get(getIndex());
-                    Label badge = new Label(order.getStatus().toString());
+                    // Usar getDisplayName() para mostrar en español
+                    Label badge = new Label(order.getStatus().getDisplayName());
                     badge.setPadding(new Insets(4, 10, 4, 10));
                     
                     String style = switch (order.getStatus()) {
@@ -512,25 +511,47 @@ public class AdminView extends VBox {
         });
         
         TableColumn<Order, Void> actionsCol = new TableColumn<>("Cambiar Estado");
-        actionsCol.setPrefWidth(220);
+        actionsCol.setPrefWidth(250);
         actionsCol.setCellFactory(col -> new TableCell<>() {
             private final ComboBox<OrderStatus> statusCombo = new ComboBox<>();
-            private final Button updateBtn = new Button("Aplicar");
+            private final Button updateBtn = new Button("✓ Aplicar");
             
             {
+                // Añadir todos los estados al ComboBox
                 statusCombo.getItems().addAll(OrderStatus.values());
-                statusCombo.setPrefWidth(120);
+                statusCombo.setPrefWidth(130);
                 statusCombo.setTooltip(new Tooltip("Seleccionar nuevo estado del pedido"));
                 
-                updateBtn.setStyle("-fx-background-color: #3498DB; -fx-text-fill: white; " +
+                // Mostrar nombres en español en el ComboBox
+                statusCombo.setButtonCell(new ListCell<OrderStatus>() {
+                    @Override
+                    protected void updateItem(OrderStatus item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty || item == null ? null : item.getDisplayName());
+                    }
+                });
+                statusCombo.setCellFactory(lv -> new ListCell<OrderStatus>() {
+                    @Override
+                    protected void updateItem(OrderStatus item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty || item == null ? null : item.getDisplayName());
+                    }
+                });
+                
+                updateBtn.setStyle("-fx-background-color: #27AE60; -fx-text-fill: white; " +
                                  "-fx-font-size: 11px; -fx-padding: 5 12; -fx-background-radius: 5; -fx-cursor: hand;");
-                updateBtn.setTooltip(new Tooltip("Guardar el nuevo estado"));
+                updateBtn.setTooltip(new Tooltip("Guardar el nuevo estado - Se actualizará en tiempo real"));
                 updateBtn.setOnAction(e -> {
                     Order order = getTableView().getItems().get(getIndex());
                     OrderStatus newStatus = statusCombo.getValue();
-                    if (newStatus != null) {
+                    if (newStatus != null && newStatus != order.getStatus()) {
                         orderController.updateOrderStatus(order.getId(), newStatus);
+                        // Actualización en tiempo real
                         refresh();
+                        // Notificación de éxito
+                        showSuccess("Estado Actualizado", 
+                            "Pedido #" + order.getId().substring(order.getId().length() - 8) + 
+                            " → " + newStatus.getDisplayName());
                     }
                 });
             }
@@ -556,7 +577,6 @@ public class AdminView extends VBox {
         return container;
     }
     
-    @SuppressWarnings("unchecked")
     private VBox createUsersTab() {
         VBox container = new VBox(15);
         container.setPadding(new Insets(15));
