@@ -199,25 +199,153 @@ public class CartView extends VBox {
             return;
         }
         
-        // Dialog para dirección de envío
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Finalizar Compra");
-        dialog.setHeaderText("Ingresa tu dirección de envío");
-        dialog.setContentText("Dirección:");
+        // Dialog personalizado para dirección de envío completa
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("🛒 Finalizar Compra");
+        dialog.setHeaderText("Información de Envío");
+        
+        // Botones
+        ButtonType confirmButtonType = new ButtonType("Confirmar Pedido", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+        
+        // Formulario de dirección
+        GridPane grid = new GridPane();
+        grid.setHgap(15);
+        grid.setVgap(12);
+        grid.setPadding(new Insets(25));
+        
+        // Estilo para labels
+        String labelStyle = "-fx-font-weight: bold; -fx-text-fill: #2C3E50;";
+        
+        // Calle y número (obligatorio)
+        Label streetLabel = new Label("Calle y Número *");
+        streetLabel.setStyle(labelStyle);
+        TextField streetField = new TextField();
+        streetField.setPromptText("Ej: Calle 10 #15-20");
+        streetField.setPrefWidth(300);
+        
+        // Apartamento/Piso (opcional)
+        Label aptLabel = new Label("Apartamento/Piso");
+        aptLabel.setStyle(labelStyle);
+        TextField aptField = new TextField();
+        aptField.setPromptText("Ej: Apto 301, Piso 3 (opcional)");
+        
+        // Ciudad (obligatorio)
+        Label cityLabel = new Label("Ciudad *");
+        cityLabel.setStyle(labelStyle);
+        TextField cityField = new TextField();
+        cityField.setPromptText("Ej: Montería");
+        
+        // Código Postal (obligatorio)
+        Label postalLabel = new Label("Código Postal *");
+        postalLabel.setStyle(labelStyle);
+        TextField postalField = new TextField();
+        postalField.setPromptText("Ej: 230001");
+        postalField.setPrefWidth(150);
+        
+        // Notas adicionales (opcional)
+        Label notesLabel = new Label("Notas de entrega");
+        notesLabel.setStyle(labelStyle);
+        TextArea notesArea = new TextArea();
+        notesArea.setPromptText("Instrucciones especiales para la entrega (opcional)");
+        notesArea.setPrefRowCount(2);
+        notesArea.setWrapText(true);
+        
+        // Resumen del pedido
+        Label summaryLabel = new Label("📋 Resumen del Pedido");
+        summaryLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #3498DB;");
+        
+        VBox summaryBox = new VBox(5);
+        summaryBox.setPadding(new Insets(10));
+        summaryBox.setStyle("-fx-background-color: #F8F9FA; -fx-background-radius: 8;");
+        
+        int totalItems = session.getCartItemCount();
+        double totalAmount = session.getCartTotal();
+        
+        Label itemsLabel = new Label("Productos: " + totalItems + " artículo(s)");
+        itemsLabel.setStyle("-fx-font-size: 12px;");
+        Label totalLabel = new Label("Total a pagar: " + String.format("$%.2f", totalAmount));
+        totalLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #27AE60;");
+        
+        summaryBox.getChildren().addAll(itemsLabel, totalLabel);
+        
+        // Nota de campos obligatorios
+        Label requiredNote = new Label("* Campos obligatorios");
+        requiredNote.setStyle("-fx-font-size: 11px; -fx-text-fill: #E74C3C;");
+        
+        // Añadir al grid
+        grid.add(streetLabel, 0, 0);
+        grid.add(streetField, 1, 0);
+        grid.add(aptLabel, 0, 1);
+        grid.add(aptField, 1, 1);
+        grid.add(cityLabel, 0, 2);
+        grid.add(cityField, 1, 2);
+        grid.add(postalLabel, 0, 3);
+        grid.add(postalField, 1, 3);
+        grid.add(notesLabel, 0, 4);
+        grid.add(notesArea, 1, 4);
+        grid.add(new Separator(), 0, 5, 2, 1);
+        grid.add(summaryLabel, 0, 6, 2, 1);
+        grid.add(summaryBox, 0, 7, 2, 1);
+        grid.add(requiredNote, 1, 8);
+        
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setPrefWidth(500);
+        
+        // Validación y resultado
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == confirmButtonType) {
+                // Validar campos obligatorios
+                String street = streetField.getText().trim();
+                String city = cityField.getText().trim();
+                String postal = postalField.getText().trim();
+                
+                if (street.isEmpty() || city.isEmpty() || postal.isEmpty()) {
+                    showAlert(Alert.AlertType.ERROR, "Campos Incompletos", 
+                        "Por favor completa todos los campos obligatorios:\n- Calle y Número\n- Ciudad\n- Código Postal");
+                    return null;
+                }
+                
+                // Construir dirección completa
+                StringBuilder fullAddress = new StringBuilder();
+                fullAddress.append(street);
+                
+                String apt = aptField.getText().trim();
+                if (!apt.isEmpty()) {
+                    fullAddress.append(", ").append(apt);
+                }
+                
+                fullAddress.append(", ").append(city);
+                fullAddress.append(" - CP: ").append(postal);
+                
+                String notes = notesArea.getText().trim();
+                if (!notes.isEmpty()) {
+                    fullAddress.append(" | Notas: ").append(notes);
+                }
+                
+                return fullAddress.toString();
+            }
+            return null;
+        });
         
         dialog.showAndWait().ifPresent(address -> {
-            if (address.trim().isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Debes ingresar una dirección");
-                return;
-            }
-            
-            if (orderController.createOrder(address)) {
-                showAlert(Alert.AlertType.INFORMATION, "Compra exitosa", 
-                         "Tu pedido ha sido registrado exitosamente");
-                refresh();
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Error", 
-                         "No se pudo procesar la compra. Verifica el stock disponible.");
+            if (address != null && !address.isEmpty()) {
+                if (orderController.createOrder(address)) {
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("✓ Compra Exitosa");
+                    successAlert.setHeaderText("¡Tu pedido ha sido registrado!");
+                    successAlert.setContentText(
+                        "Gracias por tu compra.\n\n" +
+                        "📦 Tu pedido está siendo procesado.\n" +
+                        "📍 Dirección de envío:\n" + address.split(" \\| Notas:")[0] + "\n\n" +
+                        "Puedes revisar el estado en 'Mis Pedidos'."
+                    );
+                    successAlert.showAndWait();
+                    refresh();
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Error en la Compra", 
+                             "No se pudo procesar la compra.\nVerifica el stock disponible de los productos.");
+                }
             }
         });
     }

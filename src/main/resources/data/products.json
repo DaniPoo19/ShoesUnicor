@@ -1,44 +1,11 @@
 [
   {
-    "id": "PROD_1733324400001",
-    "name": "Air Jordan 1 Azul",
-    "description": "Zapatillas Air Jordan 1 en color azul vibrante. Diseño clásico y cómodo, perfecto para cualquier ocasión. Material de alta calidad y suela antideslizante.",
-    "price": 350000.0,
-    "stock": 15,
-    "imagePath": "images/jordan 1 azules.jpg",
-    "category": "Zapatillas",
-    "brand": "Nike",
-    "active": true
-  },
-  {
-    "id": "PROD_1733324400002",
-    "name": "Air Jordan 1 Beige",
-    "description": "Zapatillas Air Jordan 1 en tono beige elegante. Estilo versátil que combina con todo. Ideal para uso diario y ocasiones especiales. Máximo confort garantizado.",
-    "price": 340000.0,
-    "stock": 12,
-    "imagePath": "images/jordan 1 beige.png",
-    "category": "Zapatillas",
-    "brand": "Nike",
-    "active": true
-  },
-  {
     "id": "PROD_1733324400003",
     "name": "Air Jordan 1 Naranja",
     "description": "Zapatillas Air Jordan 1 en naranja brillante. Energético y audaz, para quienes no temen destacar. Diseño único con detalles premium.",
     "price": 345000.0,
     "stock": 14,
     "imagePath": "images/jrodan 1 naranja.jpg",
-    "category": "Zapatillas",
-    "brand": "Nike",
-    "active": true
-  },
-  {
-    "id": "PROD_1733324400004",
-    "name": "Air Jordan 1 Rojo",
-    "description": "Zapatillas Air Jordan 1 en color rojo intenso. Llamativo y moderno, ideal para destacar. Edición limitada con acabados de lujo.",
-    "price": 360000.0,
-    "stock": 10,
-    "imagePath": "images/jordan 1 roja.png",
     "category": "Zapatillas",
     "brand": "Nike",
     "active": true
@@ -55,17 +22,6 @@
     "active": true
   },
   {
-    "id": "PROD_1733324400005",
-    "name": "Air Jordan 1 Spiderman",
-    "description": "Edición especial Air Jordan 1 inspirada en Spiderman. Diseño exclusivo para coleccionistas. Incluye detalles únicos del héroe arácnido. Edición limitada.",
-    "price": 450000.0,
-    "stock": 3,
-    "imagePath": "images/Jorad 1 Spierman.jpg",
-    "category": "Zapatillas",
-    "brand": "Nike",
-    "active": true
-  },
-  {
     "id": "PROD_1764864468652",
     "name": "Jordan 1 x travis",
     "description": "Colaboracion con travis scot",
@@ -74,6 +30,50 @@
     "imagePath": "C:\\Users\\negre\\OneDrive\\Desktop\\shopping.png",
     "category": "Casuales",
     "brand": "Jordan",
+    "active": true
+  },
+  {
+    "id": "PROD_1733324400002",
+    "name": "Air Jordan 1 Beige",
+    "description": "Zapatillas Air Jordan 1 en tono beige elegante. Estilo versátil que combina con todo. Ideal para uso diario y ocasiones especiales. Máximo confort garantizado.",
+    "price": 340000.0,
+    "stock": 11,
+    "imagePath": "images/jordan 1 beige.png",
+    "category": "Zapatillas",
+    "brand": "Nike",
+    "active": true
+  },
+  {
+    "id": "PROD_1733324400004",
+    "name": "Air Jordan 1 Rojo",
+    "description": "Zapatillas Air Jordan 1 en color rojo intenso. Llamativo y moderno, ideal para destacar. Edición limitada con acabados de lujo.",
+    "price": 360000.0,
+    "stock": 9,
+    "imagePath": "images/jordan 1 roja.png",
+    "category": "Zapatillas",
+    "brand": "Nike",
+    "active": true
+  },
+  {
+    "id": "PROD_1733324400001",
+    "name": "Air Jordan 1 Azul",
+    "description": "Zapatillas Air Jordan 1 en color azul vibrante. Diseño clásico y cómodo, perfecto para cualquier ocasión. Material de alta calidad y suela antideslizante.",
+    "price": 350000.0,
+    "stock": 14,
+    "imagePath": "images/jordan 1 azules.jpg",
+    "category": "Zapatillas",
+    "brand": "Nike",
+    "active": true
+  },
+  {
+    "id": "PROD_1733324400005",
+    "name": "Air Jordan 1 Spiderman",
+    "description": "Edición especial Air Jordan 1 inspirada en Spiderman. Diseño exclusivo para coleccionistas. Incluye detalles únicos del héroe arácnido. Edición limitada.",
+    "price": 450000.0,
+    "stock": 2,
+    "imagePath": "images/Jorad 1 Spierman.jpg",
+    "category": "Zapatillas",
+    "brand": "Nike",
     "active": true
   }
 ]

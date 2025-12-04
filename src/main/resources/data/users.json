@@ -22,34 +22,6 @@
     ]
   },
   {
-    "id": "USR_1762886794330",
-    "username": "Victor19",
-    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
-    "email": "victorprueba@prueba.com",
-    "fullName": "Victor Negrete",
-    "role": "USER",
-    "wishlistProductIds": [],
-    "orderIds": [
-      "ORD_1762886878967",
-      "ORD_1762889425747"
-    ]
-  },
-  {
-    "id": "USR_1764862640752",
-    "username": "Camilo23",
-    "password": "47a07f1b7bce6d347d076bd24ecfac6e6c25391d0268b4d3cb87096d23351d9b",
-    "email": "camicorreo2@ejemplo.com",
-    "fullName": "Camilo",
-    "role": "USER",
-    "wishlistProductIds": [
-      "PROD_1733324400006"
-    ],
-    "orderIds": [
-      "ORD_1764862898598",
-      "ORD_1764862921864"
-    ]
-  },
-  {
     "id": "USR_1762886194381",
     "username": "admin",
     "password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
@@ -60,5 +32,36 @@
       "PROD_1764864468652"
     ],
     "orderIds": []
+  },
+  {
+    "id": "USR_1764862640752",
+    "username": "Camilo23",
+    "password": "47a07f1b7bce6d347d076bd24ecfac6e6c25391d0268b4d3cb87096d23351d9b",
+    "email": "camicorreo2@ejemplo.com",
+    "fullName": "Camilo",
+    "role": "USER",
+    "wishlistProductIds": [
+      "PROD_1733324400003"
+    ],
+    "orderIds": [
+      "ORD_1764862898598",
+      "ORD_1764862921864"
+    ]
+  },
+  {
+    "id": "USR_1762886794330",
+    "username": "Victor19",
+    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "email": "victorprueba@prueba.com",
+    "fullName": "Victor Negrete",
+    "role": "USER",
+    "wishlistProductIds": [],
+    "orderIds": [
+      "ORD_1762886878967",
+      "ORD_1762889425747",
+      "ORD_1764868650834",
+      "ORD_1764868734301",
+      "ORD_1764869500757"
+    ]
   }
 ]

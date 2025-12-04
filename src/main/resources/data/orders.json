@@ -1,21 +1,21 @@
 [
   {
-    "id": "ORD_1762886878967",
-    "userId": "USR_1762886794330",
-    "username": "Victor19",
+    "id": "ORD_1762892109039",
+    "userId": "USR_1762889613920",
+    "username": "Cami23",
     "items": [
       {
         "productId": "PROD_1762886194434",
-        "productName": "Air Jordan 1 Naranja",
-        "price": 345000.0,
-        "quantity": 2,
-        "imagePath": "images/jrodan 1 naranja.jpg"
+        "productName": "Air Jordan 1 Azul",
+        "price": 350000.0,
+        "quantity": 1,
+        "imagePath": "images/jordan 1 azules.jpg"
       }
     ],
-    "total": 690000.0,
-    "status": "PENDING",
-    "orderDate": "2025-11-11T13:47:58.9712664",
-    "shippingAddress": "Monteria Cordoba "
+    "total": 350000.0,
+    "status": "SHIPPED",
+    "orderDate": "2025-11-11T15:15:09.0542665",
+    "shippingAddress": "Monteria Cordoba"
   },
   {
     "id": "ORD_1762889425747",
@@ -31,27 +31,27 @@
       }
     ],
     "total": 350000.0,
-    "status": "PENDING",
+    "status": "SHIPPED",
     "orderDate": "2025-11-11T14:30:25.7651332",
     "shippingAddress": "Unicor Monteria"
   },
   {
-    "id": "ORD_1762892109039",
-    "userId": "USR_1762889613920",
-    "username": "Cami23",
+    "id": "ORD_1762886878967",
+    "userId": "USR_1762886794330",
+    "username": "Victor19",
     "items": [
       {
         "productId": "PROD_1762886194434",
-        "productName": "Air Jordan 1 Azul",
-        "price": 350000.0,
-        "quantity": 1,
-        "imagePath": "images/jordan 1 azules.jpg"
+        "productName": "Air Jordan 1 Naranja",
+        "price": 345000.0,
+        "quantity": 2,
+        "imagePath": "images/jrodan 1 naranja.jpg"
       }
     ],
-    "total": 350000.0,
-    "status": "PENDING",
-    "orderDate": "2025-11-11T15:15:09.0542665",
-    "shippingAddress": "Monteria Cordoba"
+    "total": 690000.0,
+    "status": "CANCELLED",
+    "orderDate": "2025-11-11T13:47:58.9712664",
+    "shippingAddress": "Monteria Cordoba "
   },
   {
     "id": "ORD_1764862898598",
@@ -74,7 +74,7 @@
       }
     ],
     "total": 690000.0,
-    "status": "PENDING",
+    "status": "SHIPPED",
     "orderDate": "2025-12-04T10:41:38.5985808",
     "shippingAddress": "Bariro Manalda"
   },
@@ -92,8 +92,69 @@
       }
     ],
     "total": 350000.0,
-    "status": "PENDING",
+    "status": "PROCESSING",
     "orderDate": "2025-12-04T10:42:01.8642315",
     "shippingAddress": "Mandala"
+  },
+  {
+    "id": "ORD_1764868650834",
+    "userId": "USR_1762886794330",
+    "username": "Victor19",
+    "items": [
+      {
+        "productId": "PROD_1733324400002",
+        "productName": "Air Jordan 1 Beige",
+        "price": 340000.0,
+        "quantity": 1,
+        "imagePath": "images/jordan 1 beige.png"
+      },
+      {
+        "productId": "PROD_1733324400004",
+        "productName": "Air Jordan 1 Rojo",
+        "price": 360000.0,
+        "quantity": 1,
+        "imagePath": "images/jordan 1 roja.png"
+      }
+    ],
+    "total": 700000.0,
+    "status": "PENDING",
+    "orderDate": "2025-12-04T12:17:30.8409391",
+    "shippingAddress": "Barrio Mandarin"
+  },
+  {
+    "id": "ORD_1764868734301",
+    "userId": "USR_1762886794330",
+    "username": "Victor19",
+    "items": [
+      {
+        "productId": "PROD_1733324400001",
+        "productName": "Air Jordan 1 Azul",
+        "price": 350000.0,
+        "quantity": 1,
+        "imagePath": "images/jordan 1 azules.jpg"
+      }
+    ],
+    "total": 350000.0,
+    "status": "PENDING",
+    "orderDate": "2025-12-04T12:18:54.3010988",
+    "shippingAddress": "Barrio ElMirador"
+  },
+  {
+    "id": "ORD_1764869500757",
+    "userId": "USR_1762886794330",
+    "username": "Victor19",
+    "items": [
+      {
+        "productId": "PROD_1733324400005",
+        "productName": "Air Jordan 1 Spiderman",
+        "price": 450000.0,
+        "quantity": 1,
+        "imagePath": "images/Jorad 1 Spierman.jpg"
+      }
+    ],
+    "total": 450000.0,
+    "status": "PENDING",
+    "orderDate": "2025-12-04T12:31:40.7604701",
+    "shippingAddress": "Calle 56 carrera 2, Casa 24, Cerete - CP: 31002514 | Notas: Deja al señor walter"
   }
 ]
