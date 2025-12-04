@@ -52,5 +52,48 @@
     "status": "PENDING",
     "orderDate": "2025-11-11T15:15:09.0542665",
     "shippingAddress": "Monteria Cordoba"
+  },
+  {
+    "id": "ORD_1764862898598",
+    "userId": "USR_1764862640752",
+    "username": "Camilo23",
+    "items": [
+      {
+        "productId": "PROD_1762889695001",
+        "productName": "Air Jordan 1 Beige",
+        "price": 340000.0,
+        "quantity": 1,
+        "imagePath": "images/jordan 1 beige.png"
+      },
+      {
+        "productId": "PROD_1762886194434",
+        "productName": "Air Jordan 1 Azul",
+        "price": 350000.0,
+        "quantity": 1,
+        "imagePath": "images/jordan 1 azules.jpg"
+      }
+    ],
+    "total": 690000.0,
+    "status": "PENDING",
+    "orderDate": "2025-12-04T10:41:38.5985808",
+    "shippingAddress": "Bariro Manalda"
+  },
+  {
+    "id": "ORD_1764862921864",
+    "userId": "USR_1764862640752",
+    "username": "Camilo23",
+    "items": [
+      {
+        "productId": "PROD_1762886194434",
+        "productName": "Air Jordan 1 Azul",
+        "price": 350000.0,
+        "quantity": 1,
+        "imagePath": "images/jordan 1 azules.jpg"
+      }
+    ],
+    "total": 350000.0,
+    "status": "PENDING",
+    "orderDate": "2025-12-04T10:42:01.8642315",
+    "shippingAddress": "Mandala"
   }
 ]

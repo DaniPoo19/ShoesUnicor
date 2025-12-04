@@ -20,6 +20,18 @@
     "orderIds": []
   },
   {
+    "id": "USR_1762889613920",
+    "username": "Cami23",
+    "password": "e54fc6b51915e222ba6196747a19ebb8dfa651fd2b46a385a0ded647fbfefda0",
+    "email": "camiejemplo@ejemplo.com",
+    "fullName": "Camilo Sanchez",
+    "role": "USER",
+    "wishlistProductIds": [],
+    "orderIds": [
+      "ORD_1762892109039"
+    ]
+  },
+  {
     "id": "USR_1762886794330",
     "username": "Victor19",
     "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
@@ -33,17 +45,16 @@
     ]
   },
   {
-    "id": "USR_1762889613920",
-    "username": "Cami23",
-    "password": "e54fc6b51915e222ba6196747a19ebb8dfa651fd2b46a385a0ded647fbfefda0",
-    "email": "camiejemplo@ejemplo.com",
-    "fullName": "Camilo Sanchez",
+    "id": "USR_1764862640752",
+    "username": "Camilo23",
+    "password": "47a07f1b7bce6d347d076bd24ecfac6e6c25391d0268b4d3cb87096d23351d9b",
+    "email": "camicorreo2@ejemplo.com",
+    "fullName": "Camilo",
     "role": "USER",
-    "wishlistProductIds": [
-      "PROD_1762886194434"
-    ],
+    "wishlistProductIds": [],
     "orderIds": [
-      "ORD_1762892109039"
+      "ORD_1764862898598",
+      "ORD_1764862921864"
     ]
   }
 ]
