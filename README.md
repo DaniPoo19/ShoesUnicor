@@ -149,9 +149,6 @@ Al ejecutar la aplicación por primera vez, se crearán automáticamente:
 
 - **Usuarios de Prueba:**
   - Username: `Victor19`, Password: `123456`
-  - Username: `Maria23`, Password: `123456`
-  - Username: `Carlos_2000`, Password: `123456`
-  - Username: `Andrea_M`, Password: `123456`
 
 - **Productos de Ejemplo:**
   - 6 productos Air Jordan 1 en diferentes colores
